@@ -1,0 +1,111 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    position: relative;
+}
+
+.menu-lateral {
+    width: 250px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    position: fixed;
+    height: 100vh;
+    overflow: auto;
+}
+
+.menu-lateral h2 {
+    text-align: center;
+}
+
+.menu-lateral ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu-lateral ul li {
+    margin: 15px 0;
+}
+
+.menu-lateral ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+}
+
+.menu-principal {
+    margin-left: 250px;
+    padding: 20px;
+    flex: 1;
+}
+
+.imagem-acomodacoes img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.reservas-form {
+    margin: 20px 0;
+}
+
+.reservas-form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.reservas-form input, .reservas-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.reservas-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.reservas-form button:hover {
+    background-color: #45a049;
+}
+
+.promocoes, .atracoes {
+    margin-top: 20px;
+}
+
+.imagem-lateral {
+    position: fixed;
+    width: 200px;
+    height: auto;
+    z-index: -1;
+}
+
+.imagem-lateral img {
+    width: 100%;
+    height: auto;
+}
+
+.imagem-lateral.esquerda {
+    left: 0;
+    top: 0;
+}
+
+.imagem-lateral.direita {
+    right: 0;
+    top: 0;
+}
