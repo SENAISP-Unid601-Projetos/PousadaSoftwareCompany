@@ -110,3 +110,22 @@ button {
     color: white;
     border: none;
 }
+
+.skale-up{
+    transition: transform 0.5s;
+}
+
+  .scale-up {
+    animation: scale-up 2s; /* animate the scale up effect */
+  }
+  
+  @keyframes scale-up {
+    0% {
+      transform: scale(0.5);
+      transform-origin: 50% 100%;
+    }
+    50% {
+      transform: scale(1);
+      transform-origin: 50% 100%; /* scale up to 1.5 times the original size */
+    }
+  }
