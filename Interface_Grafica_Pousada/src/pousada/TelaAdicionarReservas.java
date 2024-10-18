@@ -6,27 +6,32 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.*;
+import com.toedter.calendar.JDateChooser;
+import java.util.List;
 
-public class TelaAdicionarReservas extends JFrame {
+public class TelaAdicionarReservas extends JDialog {
     private JComboBox<String> comboClientes;
     private JComboBox<String> comboAcomodacoes;
-    private JSpinner spinnerCheckIn;
-    private JSpinner spinnerCheckOut;
+    private JDateChooser dateChooserCheckIn;
+    private JDateChooser dateChooserCheckOut;
     private JSpinner spinnerQuantidadePessoas;
     private JComboBox<String> comboReservas;
+    private Map<Integer, List<Date[]>> reservasMap; // Mapeia acomodações e suas datas de reservas
 
-    public TelaAdicionarReservas() {
-        setTitle("Adicionar Reservas");
+    public TelaAdicionarReservas(JFrame parent) {
+        super(parent, "Adicionar Reservas", true); // Modo modal
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridBagLayout());
 
+        reservasMap = new HashMap<>(); // Inicializa o mapa de reservas
         configurarComponentes();
         carregarClientes();
         carregarAcomodacoes();
         carregarReservas();
+
+        setLocationRelativeTo(parent); // Centraliza em relação à janela pai
     }
 
     private void configurarComponentes() {
@@ -48,6 +53,7 @@ public class TelaAdicionarReservas extends JFrame {
         add(lblAcomodacao, gbc);
 
         comboAcomodacoes = new JComboBox<>();
+        comboAcomodacoes.addActionListener(e -> verificarDisponibilidadeAcomodacao());
         gbc.gridx = 1; gbc.gridy = 1;
         add(comboAcomodacoes, gbc);
 
@@ -55,21 +61,19 @@ public class TelaAdicionarReservas extends JFrame {
         gbc.gridx = 0; gbc.gridy = 2;
         add(lblCheckIn, gbc);
 
-        spinnerCheckIn = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor editorCheckIn = new JSpinner.DateEditor(spinnerCheckIn, "yyyy-MM-dd");
-        spinnerCheckIn.setEditor(editorCheckIn);
+        dateChooserCheckIn = new JDateChooser();
+        dateChooserCheckIn.setDateFormatString("yyyy-MM-dd");
         gbc.gridx = 1; gbc.gridy = 2;
-        add(spinnerCheckIn, gbc);
+        add(dateChooserCheckIn, gbc);
 
         JLabel lblCheckOut = new JLabel("Data de Check-Out:");
         gbc.gridx = 0; gbc.gridy = 3;
         add(lblCheckOut, gbc);
 
-        spinnerCheckOut = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor editorCheckOut = new JSpinner.DateEditor(spinnerCheckOut, "yyyy-MM-dd");
-        spinnerCheckOut.setEditor(editorCheckOut);
+        dateChooserCheckOut = new JDateChooser();
+        dateChooserCheckOut.setDateFormatString("yyyy-MM-dd");
         gbc.gridx = 1; gbc.gridy = 3;
-        add(spinnerCheckOut, gbc);
+        add(dateChooserCheckOut, gbc);
 
         JLabel lblQuantidadePessoas = new JLabel("Quantidade de Pessoas:");
         gbc.gridx = 0; gbc.gridy = 4;
@@ -99,7 +103,7 @@ public class TelaAdicionarReservas extends JFrame {
         painelBotoes.add(btnCancelarReserva);
 
         JButton btnVoltar = new JButton("Voltar");
-        btnVoltar.addActionListener(e -> voltarTelaInicial());
+        btnVoltar.addActionListener(e -> dispose());
         painelBotoes.add(btnVoltar);
 
         // Adicionar o painel de botões à tela
@@ -127,7 +131,7 @@ public class TelaAdicionarReservas extends JFrame {
 
     private void carregarAcomodacoes() {
         try (Connection conexao = ConexaoBanco.getConnection()) {
-            String sql = "SELECT id, nome_quarto FROM acomodacoes WHERE status_disponibilidade = 'Disponível'";
+            String sql = "SELECT id, nome_quarto FROM acomodacoes";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -144,15 +148,18 @@ public class TelaAdicionarReservas extends JFrame {
 
     private void carregarReservas() {
         try (Connection conexao = ConexaoBanco.getConnection()) {
-            String sql = "SELECT id, id_usuario, id_acomodacao FROM reservas";
+            String sql = "SELECT id_acomodacao, data_entrada, data_saida FROM reservas";
             PreparedStatement stmt = conexao.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             while (rs.next()) {
-                int idReserva = rs.getInt("id");
-                int idUsuario = rs.getInt("id_usuario");
-                String nomeCliente = obterNomeCliente(idUsuario);
-                comboReservas.addItem(idReserva + " - " + nomeCliente);
+                int idAcomodacao = rs.getInt("id_acomodacao");
+                Date dataEntrada = rs.getDate("data_entrada");
+                Date dataSaida = rs.getDate("data_saida");
+
+                // Adiciona a reserva ao mapa de reservas por acomodação
+                reservasMap.computeIfAbsent(idAcomodacao, k -> new ArrayList<>()).add(new Date[]{dataEntrada, dataSaida});
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,27 +167,43 @@ public class TelaAdicionarReservas extends JFrame {
         }
     }
 
-    private String obterNomeCliente(int idUsuario) {
-        try (Connection conexao = ConexaoBanco.getConnection()) {
-            String sql = "SELECT nome FROM usuarios WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setInt(1, idUsuario);
-            ResultSet rs = stmt.executeQuery();
+    private void verificarDisponibilidadeAcomodacao() {
+        String acomodacaoSelecionada = (String) comboAcomodacoes.getSelectedItem();
+        if (acomodacaoSelecionada != null) {
+            int idAcomodacao = Integer.parseInt(acomodacaoSelecionada.split(" - ")[0]);
+            List<Date[]> reservas = reservasMap.get(idAcomodacao);
 
-            if (rs.next()) {
-                return rs.getString("nome");
+            if (reservas != null) {
+                dateChooserCheckIn.getDateEditor().setEnabled(true);
+                dateChooserCheckOut.getDateEditor().setEnabled(true);
+                dateChooserCheckIn.getDateEditor().addPropertyChangeListener("date", evt -> validarDatas(idAcomodacao));
+                dateChooserCheckOut.getDateEditor().addPropertyChangeListener("date", evt -> validarDatas(idAcomodacao));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return "Cliente Desconhecido";
+    }
+
+    private void validarDatas(int idAcomodacao) {
+        List<Date[]> reservas = reservasMap.get(idAcomodacao);
+        Date dataCheckIn = dateChooserCheckIn.getDate();
+        Date dataCheckOut = dateChooserCheckOut.getDate();
+
+        if (dataCheckIn != null && dataCheckOut != null && reservas != null) {
+            for (Date[] reserva : reservas) {
+                if ((dataCheckIn.before(reserva[1]) && dataCheckOut.after(reserva[0])) || (dataCheckOut.before(reserva[1]) && dataCheckIn.after(reserva[0]))) {
+                    JOptionPane.showMessageDialog(this, "Acomodação já reservada para este período.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    dateChooserCheckIn.setDate(null);
+                    dateChooserCheckOut.setDate(null);
+                    return;
+                }
+            }
+        }
     }
 
     private void registrarReserva() {
         String clienteSelecionado = (String) comboClientes.getSelectedItem();
         String acomodacaoSelecionada = (String) comboAcomodacoes.getSelectedItem();
-        Date dataCheckIn = (Date) spinnerCheckIn.getValue();
-        Date dataCheckOut = (Date) spinnerCheckOut.getValue();
+        Date dataCheckIn = dateChooserCheckIn.getDate();
+        Date dataCheckOut = dateChooserCheckOut.getDate();
         int quantidadePessoas = (int) spinnerQuantidadePessoas.getValue();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -191,11 +214,10 @@ public class TelaAdicionarReservas extends JFrame {
             int idCliente = Integer.parseInt(clienteSelecionado.split(" - ")[0]);
             int idAcomodacao = Integer.parseInt(acomodacaoSelecionada.split(" - ")[0]);
 
-            // Verificar se a acomodação já está reservada para as mesmas datas
             if (verificarDisponibilidade(idAcomodacao, dataCheckIn, dataCheckOut)) {
                 try (Connection conexao = ConexaoBanco.getConnection()) {
-                    String sql = "INSERT INTO reservas (id_usuario, id_acomodacao, data_checkin, data_checkout, quantidade_pessoas, valor_total) " +
-                                 "VALUES (?, ?, ?, ?, ?, ?)";
+                    String sql = "INSERT INTO reservas (id_usuario, id_acomodacao, data_entrada, data_saida, quantidade_pessoas, valor_total) " +
+                            "VALUES (?, ?, ?, ?, ?, ?)";
 
                     double valorTotal = calcularValorTotal(idAcomodacao, quantidadePessoas, dataCheckIn, dataCheckOut);
 
@@ -208,10 +230,6 @@ public class TelaAdicionarReservas extends JFrame {
                         stmt.setDouble(6, valorTotal);
 
                         stmt.executeUpdate();
-
-                        // Atualizar status da acomodação para Indisponível
-                        atualizarStatusAcomodacao(idAcomodacao, "Indisponível");
-
                         JOptionPane.showMessageDialog(this, "Reserva registrada com sucesso!");
                         dispose(); // Fecha a tela após a confirmação
                     }
@@ -228,39 +246,16 @@ public class TelaAdicionarReservas extends JFrame {
     }
 
     private boolean verificarDisponibilidade(int idAcomodacao, Date dataCheckIn, Date dataCheckOut) {
-        try (Connection conexao = ConexaoBanco.getConnection()) {
-            String sql = "SELECT COUNT(*) FROM reservas WHERE id_acomodacao = ? " +
-                         "AND ((data_checkin <= ? AND data_checkout >= ?) OR " +
-                         "(data_checkin <= ? AND data_checkout >= ?))";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            stmt.setInt(1, idAcomodacao);
-            stmt.setString(2, sdf.format(dataCheckIn));
-            stmt.setString(3, sdf.format(dataCheckIn));
-            stmt.setString(4, sdf.format(dataCheckOut));
-            stmt.setString(5, sdf.format(dataCheckOut));
+        List<Date[]> reservas = reservasMap.get(idAcomodacao);
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) == 0; // Retorna true se não houver reservas conflitantes
+        if (reservas != null) {
+            for (Date[] reserva : reservas) {
+                if ((dataCheckIn.before(reserva[1]) && dataCheckOut.after(reserva[0])) || (dataCheckOut.before(reserva[1]) && dataCheckIn.after(reserva[0]))) {
+                    return false;
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return false; // Considera não disponível em caso de erro
-    }
-
-    private void atualizarStatusAcomodacao(int idAcomodacao, String novoStatus) {
-        try (Connection conexao = ConexaoBanco.getConnection()) {
-            String sql = "UPDATE acomodacoes SET status_disponibilidade = ? WHERE id = ?";
-            PreparedStatement stmt = conexao.prepareStatement(sql);
-            stmt.setString(1, novoStatus);
-            stmt.setInt(2, idAcomodacao);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao atualizar o status da acomodação: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+        return true;
     }
 
     private double calcularValorTotal(int idAcomodacao, int quantidadePessoas, Date dataCheckIn, Date dataCheckOut) {
@@ -292,27 +287,11 @@ public class TelaAdicionarReservas extends JFrame {
             int confirmacao = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja cancelar esta reserva?", "Confirmar Cancelamento", JOptionPane.YES_NO_OPTION);
             if (confirmacao == JOptionPane.YES_OPTION) {
                 try (Connection conexao = ConexaoBanco.getConnection()) {
-                    // Obter a acomodação associada à reserva
-                    String sqlAcomodacao = "SELECT id_acomodacao FROM reservas WHERE id = ?";
-                    PreparedStatement stmtAcomodacao = conexao.prepareStatement(sqlAcomodacao);
-                    stmtAcomodacao.setInt(1, idReserva);
-                    ResultSet rsAcomodacao = stmtAcomodacao.executeQuery();
-
-                    int idAcomodacao = 0;
-                    if (rsAcomodacao.next()) {
-                        idAcomodacao = rsAcomodacao.getInt("id_acomodacao");
-                    }
-
-                    // Cancelar a reserva
                     String sql = "DELETE FROM reservas WHERE id = ?";
                     PreparedStatement stmt = conexao.prepareStatement(sql);
                     stmt.setInt(1, idReserva);
                     stmt.executeUpdate();
 
-                    // Atualizar o status da acomodação para Disponível
-                    atualizarStatusAcomodacao(idAcomodacao, "Disponível");
-
-                    // Remover a reserva do comboBox
                     comboReservas.removeItemAt(reservaSelecionada);
                     JOptionPane.showMessageDialog(this, "Reserva cancelada com sucesso!");
                 } catch (SQLException e) {
@@ -325,13 +304,13 @@ public class TelaAdicionarReservas extends JFrame {
         }
     }
 
-    private void voltarTelaInicial() {
-        new TelaInicial().setVisible(true);
-        dispose();  // Fecha a tela atual
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TelaAdicionarReservas().setVisible(true));
+        JFrame frame = new JFrame("Sistema de Reservas");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+
+        // Criar a tela de adicionar reservas
+        TelaAdicionarReservas telaReservas = new TelaAdicionarReservas(frame);
+        telaReservas.setVisible(true);
     }
 }
-

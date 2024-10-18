@@ -6,16 +6,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class TelaCadastroClientes extends JFrame {
+public class TelaCadastroClientes extends JDialog {
     private JTextField txtNome, txtEndereco, txtCep, txtEstado, txtPais, txtTelefone, txtEmail, txtDataNascimento;
 
-    public TelaCadastroClientes() {
-        setTitle("Cadastro de Clientes - Gerenciamento de Pousada");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);  // Tela cheia
+    public TelaCadastroClientes(JFrame parent) {
+        super(parent, "Cadastro de Clientes - Gerenciamento de Pousada", true); // Modo modal
+        setSize(800, 600);  // Tamanho padrão da janela
         getContentPane().setBackground(Color.DARK_GRAY);  // Fundo escuro
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         configurarComponentes();
+        setLocationRelativeTo(parent); // Centraliza em relação à janela pai
     }
 
     private void configurarComponentes() {
@@ -76,17 +76,14 @@ public class TelaCadastroClientes extends JFrame {
 
         JButton btnSalvar = criarBotao("Salvar", corTexto, Color.GRAY);
         JButton btnCancelar = criarBotao("Cancelar", corTexto, Color.GRAY);
-        JButton btnVoltar = criarBotao("Voltar para Tela Inicial", corTexto, Color.GRAY);
 
         painelBotoes.add(btnSalvar);
         painelBotoes.add(btnCancelar);
-        painelBotoes.add(btnVoltar);
         add(painelBotoes, BorderLayout.SOUTH);
 
         // Ações dos botões
         btnSalvar.addActionListener(e -> salvarCliente());
-        btnCancelar.addActionListener(e -> dispose());
-        btnVoltar.addActionListener(e -> voltarTelaInicial());
+        btnCancelar.addActionListener(e -> dispose());  // Fecha o diálogo ao cancelar
     }
 
     private JLabel criarLabel(String texto, Color cor) {
@@ -162,12 +159,13 @@ public class TelaCadastroClientes extends JFrame {
         txtDataNascimento.setText("");
     }
 
-    private void voltarTelaInicial() {
-        new TelaInicial().setVisible(true);
-        dispose();  // Fecha a tela atual
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TelaCadastroClientes().setVisible(true));
+        // Para testar o diálogo
+        JFrame frame = new JFrame("Teste - Tela Cadastro Clientes");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1024, 768);
+
+        TelaCadastroClientes telaCadastroClientes = new TelaCadastroClientes(frame);
+        telaCadastroClientes.setVisible(true); // Mostra o diálogo
     }
 }

@@ -6,17 +6,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class TelaCadastroAcomodacoes extends JFrame {
+public class TelaCadastroAcomodacoes extends JDialog {
     private JTextField txtNumeroQuarto, txtNomeQuarto, txtValor, txtDescricao;
     private JComboBox<String> comboStatus;
 
-    public TelaCadastroAcomodacoes() {
-        setTitle("Cadastro de Acomodações - Gerenciamento de Pousada");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);  // Tela cheia
-        getContentPane().setBackground(Color.DARK_GRAY);  // Fundo escuro
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
+    public TelaCadastroAcomodacoes(JFrame parent) {
+        super(parent, "Cadastro de Acomodações - Gerenciamento de Pousada", true); // Modo modal
+        setSize(800, 600);  // Define um tamanho padrão para a janela
         configurarComponentes();
+        setLocationRelativeTo(parent); // Centraliza em relação à janela pai
     }
 
     private void configurarComponentes() {
@@ -71,7 +69,7 @@ public class TelaCadastroAcomodacoes extends JFrame {
 
         // Ações dos botões
         btnSalvar.addActionListener(e -> salvarAcomodacao());
-        btnCancelar.addActionListener(e -> dispose());  // Fecha a janela ao cancelar
+        btnCancelar.addActionListener(e -> dispose());  // Fecha o diálogo ao cancelar
     }
 
     private JLabel criarLabel(String texto, Color cor) {
@@ -102,7 +100,15 @@ public class TelaCadastroAcomodacoes extends JFrame {
         String numeroQuarto = txtNumeroQuarto.getText();
         String nomeQuarto = txtNomeQuarto.getText();
         String descricao = txtDescricao.getText();
-        double valorDiaria = Double.parseDouble(txtValor.getText());
+
+        double valorDiaria;
+        try {
+            valorDiaria = Double.parseDouble(txtValor.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "O valor da diária deve ser um número válido.");
+            return;
+        }
+
         String status = (String) comboStatus.getSelectedItem();
 
         try (Connection conexao = ConexaoBanco.getConnection()) {
@@ -131,7 +137,12 @@ public class TelaCadastroAcomodacoes extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TelaCadastroAcomodacoes().setVisible(true));
+        // Para testar, abra a janela dentro de um JFrame
+        JFrame frame = new JFrame("Teste - Tela Cadastro Acomodações");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1024, 768);
+        
+        TelaCadastroAcomodacoes telaCadastroAcomodacoes = new TelaCadastroAcomodacoes(frame);
+        telaCadastroAcomodacoes.setVisible(true); // Mostra o diálogo
     }
 }
-

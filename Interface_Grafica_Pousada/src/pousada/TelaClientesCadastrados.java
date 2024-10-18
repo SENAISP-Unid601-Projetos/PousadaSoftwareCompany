@@ -3,24 +3,23 @@ package pousada;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-
 import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class TelaClientesCadastrados extends JFrame {
+public class TelaClientesCadastrados extends JDialog {  // Mudança para JDialog
     private DefaultTableModel modeloTabelaClientes;
 
-    public TelaClientesCadastrados() {
-        setTitle("Clientes Cadastrados - Gerenciamento de Pousada");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    public TelaClientesCadastrados(JFrame parent) {
+        super(parent, "Clientes Cadastrados - Gerenciamento de Pousada", true); // Modo modal
+        setSize(1000, 600);  // Define um tamanho padrão para a janela
         setLayout(new BorderLayout());
 
         configurarComponentes();
-        carregarClientesDoBanco(); // Carrega os clientes do banco de dados
+        carregarClientesDoBanco();  // Carrega os clientes do banco de dados
+        setLocationRelativeTo(parent); // Centraliza em relação à janela pai
     }
 
     private void configurarComponentes() {
@@ -55,7 +54,7 @@ public class TelaClientesCadastrados extends JFrame {
         JScrollPane scrollPane = new JScrollPane(tabelaClientes);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Painel de botões no estilo da tela inicial
+        // Painel de botões
         JPanel painelBotoes = new JPanel(new GridLayout(1, 4, 10, 10));
         painelBotoes.setBackground(Color.DARK_GRAY);
         painelBotoes.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
@@ -63,7 +62,7 @@ public class TelaClientesCadastrados extends JFrame {
         JButton btnAdicionarCliente = criarBotao("Adicionar Cliente", e -> adicionarCliente());
         JButton btnEditarCliente = criarBotao("Editar Cliente", e -> editarCliente(tabelaClientes));
         JButton btnRemoverCliente = criarBotao("Remover Cliente", e -> removerCliente(tabelaClientes));
-        JButton btnVoltar = criarBotao("Voltar", e -> voltarTelaInicial());
+        JButton btnVoltar = criarBotao("Voltar", e -> dispose()); // Fecha o diálogo
 
         painelBotoes.add(btnAdicionarCliente);
         painelBotoes.add(btnEditarCliente);
@@ -77,7 +76,7 @@ public class TelaClientesCadastrados extends JFrame {
         JButton botao = new JButton(texto);
         botao.setFont(new Font("Tahoma", Font.PLAIN, 28));
         botao.setForeground(Color.WHITE);
-        botao.setBackground(new Color(70, 130, 180)); // Cor azul para consistência com a tela inicial
+        botao.setBackground(new Color(70, 130, 180));  // Cor azul para consistência com a tela inicial
         botao.setFocusPainted(false);
         botao.addActionListener(acao);
         return botao;
@@ -133,12 +132,13 @@ public class TelaClientesCadastrados extends JFrame {
         }
     }
 
-    private void voltarTelaInicial() {
-        new TelaInicial().setVisible(true);
-        dispose();  // Fecha a tela atual
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TelaClientesCadastrados().setVisible(true));
+        // Para testar, abrir a janela dentro de um JFrame
+        JFrame frame = new JFrame("Teste - Clientes Cadastrados");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1024, 768);
+
+        TelaClientesCadastrados telaClientesCadastrados = new TelaClientesCadastrados(frame);
+        telaClientesCadastrados.setVisible(true); // Mostra o diálogo
     }
 }

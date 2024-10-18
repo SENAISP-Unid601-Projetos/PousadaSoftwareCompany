@@ -8,18 +8,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class TelaConsultaAcomodacoes extends JFrame {
+public class TelaConsultaAcomodacoes extends JDialog {  // Mudança para JDialog
     private DefaultTableModel modeloTabelaAcomodacoes;
     private JTable tabelaAcomodacoes;
 
-    public TelaConsultaAcomodacoes() {
-        setTitle("Consulta de Acomodações - Gerenciamento de Pousada");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    public TelaConsultaAcomodacoes(JFrame parent) {
+        super(parent, "Consulta de Acomodações - Gerenciamento de Pousada", true); // Modo modal
+        setSize(1000, 600);  // Define um tamanho padrão para a janela
         getContentPane().setBackground(Color.DARK_GRAY);
         setLayout(new BorderLayout());
         configurarComponentes();
         carregarAcomodacoes();
+        setLocationRelativeTo(parent); // Centraliza em relação à janela pai
     }
 
     private void configurarComponentes() {
@@ -42,17 +42,17 @@ public class TelaConsultaAcomodacoes extends JFrame {
 
         // Painel de Botões
         JPanel painelBotoes = new JPanel();
-        painelBotoes.setLayout(new GridLayout(1, 3, 10, 10)); // Grade com 3 botões
+        painelBotoes.setLayout(new GridLayout(1, 3, 10, 10));  // Grade com 3 botões
         painelBotoes.setBackground(Color.DARK_GRAY);
         painelBotoes.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Botões
         JButton btnVoltar = criarBotao("Voltar", Color.WHITE, Color.GRAY);
-        JButton btnAtualizar = criarBotao("Atualizar", Color.WHITE, new Color(70, 130, 180)); // Azul para destaque
+        JButton btnAtualizar = criarBotao("Atualizar", Color.WHITE, new Color(70, 130, 180));  // Azul para destaque
         JButton btnDeletar = criarBotao("Deletar Acomodação", Color.WHITE, Color.RED);
 
         // Adicionando ação aos botões
-        btnVoltar.addActionListener(e -> voltarTelaInicial());
+        btnVoltar.addActionListener(e -> dispose()); // Fecha o diálogo
         btnAtualizar.addActionListener(e -> carregarAcomodacoes());
         btnDeletar.addActionListener(e -> deletarAcomodacao());
 
@@ -120,13 +120,13 @@ public class TelaConsultaAcomodacoes extends JFrame {
         }
     }
 
-    // Método para voltar à Tela Inicial
-    private void voltarTelaInicial() {
-        new TelaInicial().setVisible(true);
-        dispose();  // Fecha a tela atual
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TelaConsultaAcomodacoes().setVisible(true));
+        // Para testar, abrir a janela dentro de um JFrame
+        JFrame frame = new JFrame("Teste - Consulta de Acomodações");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1024, 768);
+
+        TelaConsultaAcomodacoes telaConsultaAcomodacoes = new TelaConsultaAcomodacoes(frame);
+        telaConsultaAcomodacoes.setVisible(true); // Mostra o diálogo
     }
 }

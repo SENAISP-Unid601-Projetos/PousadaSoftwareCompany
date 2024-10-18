@@ -1,28 +1,39 @@
 package pousada;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class TelaCheckin extends JFrame {
+import com.toedter.calendar.JDateChooser;
+
+public class TelaCheckin extends JDialog {
     private JTable tabelaReservas;
     private DefaultTableModel modeloTabelaReservas;
     private JButton btnConfirmarCheckin;
+    private JDateChooser dateChooserCheckin;  // Componente para escolher a data do check-in
 
-    public TelaCheckin() {
-        setTitle("Realizar Check-In");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null); // Centraliza a janela
+    public TelaCheckin(JFrame parent) {
+        super(parent, "Realizar Check-In", true); // Modo modal
+        setSize(800, 600);  // Define o tamanho da janela
         setLayout(new BorderLayout());
         configurarComponentes();
         carregarReservas();
+        setLocationRelativeTo(parent); // Centraliza em relação à janela pai
     }
 
     private void configurarComponentes() {
@@ -44,6 +55,14 @@ public class TelaCheckin extends JFrame {
         JScrollPane scrollPane = new JScrollPane(tabelaReservas);
         painelPrincipal.add(scrollPane, BorderLayout.CENTER);
 
+        // Componente para escolher a data de check-in
+        JPanel painelDataCheckin = new JPanel();
+        painelDataCheckin.add(new JLabel("Data de Check-In:"));
+        dateChooserCheckin = new JDateChooser();
+        dateChooserCheckin.setDateFormatString("yyyy-MM-dd");
+        painelDataCheckin.add(dateChooserCheckin);
+        painelPrincipal.add(painelDataCheckin, BorderLayout.NORTH);
+
         // Botão para confirmar check-in
         btnConfirmarCheckin = new JButton("Confirmar Check-In");
         btnConfirmarCheckin.addActionListener(new ActionListener() {
@@ -61,11 +80,11 @@ public class TelaCheckin extends JFrame {
     private void carregarReservas() {
         // Conexão ao banco de dados para buscar as reservas
         try (Connection conexao = ConexaoBanco.getConnection()) {
-            String sql = "SELECT r.id, u.nome AS cliente, a.nome_quarto AS acomodacao, r.data_checkin, r.data_checkout, r.quantidade_pessoas, r.valor_total " +
+            String sql = "SELECT r.id, u.nome AS cliente, a.nome_quarto AS acomodacao, r.data_entrada, r.quantidade_pessoas, r.valor_total " +
                          "FROM reservas r " +
                          "JOIN usuarios u ON r.id_usuario = u.id " +
                          "JOIN acomodacoes a ON r.id_acomodacao = a.id " +
-                         "WHERE r.data_checkin IS NULL"; // Mostrar apenas reservas sem check-in realizado
+                         "WHERE r.checkin IS NULL"; // Mostrar apenas reservas sem check-in realizado
             PreparedStatement stmt = conexao.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -78,7 +97,7 @@ public class TelaCheckin extends JFrame {
                     rs.getInt("id"),
                     rs.getString("cliente"),
                     rs.getString("acomodacao"),
-                    rs.getDate("data_checkin"),
+                    rs.getDate("data_entrada"),
                     rs.getInt("quantidade_pessoas"),
                     rs.getDouble("valor_total")
                 });
@@ -94,31 +113,32 @@ public class TelaCheckin extends JFrame {
         if (linhaSelecionada != -1) {
             int idReserva = (int) modeloTabelaReservas.getValueAt(linhaSelecionada, 0); // Obter o ID da reserva selecionada
 
-            // Confirmar check-in
-            int confirmacao = JOptionPane.showConfirmDialog(this, "Deseja confirmar o Check-In para esta reserva?", "Confirmar Check-In", JOptionPane.YES_NO_OPTION);
-            if (confirmacao == JOptionPane.YES_OPTION) {
-                try (Connection conexao = ConexaoBanco.getConnection()) {
-                    // Inserir registro na tabela checkin_checkout
-                    String sqlInsert = "INSERT INTO checkin_checkout (id_reserva, id_cliente, data_checkin) VALUES (?, ?, NOW())";
-                    PreparedStatement stmtInsert = conexao.prepareStatement(sqlInsert);
-                    stmtInsert.setInt(1, idReserva);
-                    stmtInsert.setInt(2, (int) modeloTabelaReservas.getValueAt(linhaSelecionada, 0)); // ID do cliente (assumindo que é o mesmo da reserva)
+            // Verificar se uma data de check-in foi selecionada
+            if (dateChooserCheckin.getDate() != null) {
+                java.util.Date dataCheckin = dateChooserCheckin.getDate();
+                java.sql.Date dataCheckinSQL = new java.sql.Date(dataCheckin.getTime()); // Converter para SQL Date
 
-                    stmtInsert.executeUpdate();
+                // Confirmar check-in
+                int confirmacao = JOptionPane.showConfirmDialog(this, "Deseja confirmar o Check-In para esta reserva?", "Confirmar Check-In", JOptionPane.YES_NO_OPTION);
+                if (confirmacao == JOptionPane.YES_OPTION) {
+                    try (Connection conexao = ConexaoBanco.getConnection()) {
+                        // Atualizar a reserva para incluir a data de check-in
+                        String sqlUpdate = "UPDATE reservas SET checkin = ? WHERE id = ?";
+                        PreparedStatement stmtUpdate = conexao.prepareStatement(sqlUpdate);
+                        stmtUpdate.setDate(1, dataCheckinSQL);
+                        stmtUpdate.setInt(2, idReserva);
 
-                    // Atualizar a reserva para incluir a data de check-in
-                    String sqlUpdate = "UPDATE reservas SET data_checkin = NOW() WHERE id = ?";
-                    PreparedStatement stmtUpdate = conexao.prepareStatement(sqlUpdate);
-                    stmtUpdate.setInt(1, idReserva);
+                        stmtUpdate.executeUpdate();
 
-                    stmtUpdate.executeUpdate();
-
-                    JOptionPane.showMessageDialog(this, "Check-In realizado com sucesso!");
-                    modeloTabelaReservas.removeRow(linhaSelecionada); // Remove a linha da tabela após o check-in
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Erro ao realizar Check-In: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Check-In realizado com sucesso!");
+                        modeloTabelaReservas.removeRow(linhaSelecionada); // Remove a linha da tabela após o check-in
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Erro ao realizar Check-In: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Selecione uma data de Check-In.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Selecione uma reserva para fazer o Check-In.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -126,8 +146,12 @@ public class TelaCheckin extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TelaCheckin().setVisible(true));
+        // Para testar o diálogo
+        JFrame frame = new JFrame("Teste - Tela Check-In");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1024, 768);
+
+        TelaCheckin telaCheckin = new TelaCheckin(frame);
+        telaCheckin.setVisible(true); // Mostra o diálogo
     }
 }
-
-
