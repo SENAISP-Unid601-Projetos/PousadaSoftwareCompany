@@ -10,18 +10,23 @@
 </head>
 
 <body>
+    <div class="container">
+        <header class="d-flex justify-content-center py-3">
+          <ul class="nav nav-pills">
+            <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
+            <li class="nav-item"><a href="#cafe-da-manha" class="nav-link">Café da Manhã</a></li>
+            <li class="nav-item"><a href="#acomodacoes" class="nav-link">Acomodações</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Sobre</a></li>
+          </ul>
+        </header>
+      </div>
+      <div class="b-example-divider"></div>
     <!-- Menu Lateral -->
     <div class="menu-lateral">
         <h2>Pousada Encantada</h2>
         <ul>
-            <li><a href="#cafe-da-manha">Café da Manhã</a></li>
-            <li><a href="#acomodacoes">Acomodações</a></li>
-            <li><a href="#localizacao">Localização</a></li>
-            <li><a href="#servicos">Serviços</a></li>
-            <li><a href="#horarios-de-atendimento">Horários de Atendimento</a></li>
             <li><a href="#" id="openPopup">Fazer a Reserva</a></li>
             <li><a href="{{ url_for('getLogin') }}">Voltar para Login</a></li> 
-           
         </ul>
     </div>
 
@@ -73,12 +78,11 @@
         <div class="menu-principal">
             <section id="cafe-da-manha" class="mt-4">
                 <h2>Café da Manhã</h2>
-                <p>Comece o seu dia de forma impecável com o nosso café da manhã. <a href="#" data-bs-toggle="modal" data-bs-target="#popupMenu">Ver Menu do Café da Manhã</a></p>
+                <p>Comece o seu dia de forma impecável com o nosso café da manhã.</p>
             </section>
 
             <section id="acomodacoes">
                 <h2>Acomodações</h2>
-                <p>Nossas acomodações foram projetadas para garantir conforto e tranquilidade. <a href="#" data-bs-toggle="modal" data-bs-target="#popupQuartos">Ver Tipos de Quartos</a></p>
                 <hr class="featurette-divider">
                 <div class="row featurette">
                     <div class="col-md-7">
@@ -150,115 +154,58 @@
                 <h2>Serviços</h2>
                 <p>Wi-Fi gratuito, estacionamento privativo, piscina e spa estão à disposição...</p>
             </section>
-
-            <section id="horarios-de-atendimento">
-                <h2>Horários de Atendimento</h2>
-                <p>Nosso atendimento está disponível das 7h às 22h...</p>
-            </section>
         </div>
+        <hr class="featurette-divider">
+        <div class="container">
+            <footer class="py-5">
+              <div class="row">
+                <div class="col-2">
+                  <h5>Loja</h5>
+                  <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="index.html" class="nav-link p-0 text-muted">Home</a></li>
+                    <li class="nav-item mb-2"><a href="#cafe-da-manha" class="nav-link p-0 text-muted">Café da Manhã</a></li>
+                    <li class="nav-item mb-2"><a href="#acomodacoes" class="nav-link p-0 text-muted">Acomodações</a></li>
+                    <li class="nav-item mb-2"><a href="quemSomos.html" class="nav-link p-0 text-muted">Sobre</a></li>
+                  </ul>
+                </div> 
+                <div class="col-2">
+                    <h5>Institucional</h5>
+                    <ul class="nav flex-column">
+                      <li class="nav-item mb-2"><a href="https://www.procon.df.gov.br/wp-content/uploads/2019/08/Codigo-do-consumidor-FINAL.pdf" class="nav-link p-0 text-muted">Codigo de Defesa do Consumidor</a></li>
+                    </ul>
+                  </div>  
+                  <div class="col-3">
+                    <h5>Atendimento</h5>
+                    <ul class="nav flex-column">
+                      <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
+                        Horário de atendimento:
+                        11:00 às 23:00 -
+                        Segunda a Domingo,
+                        horário de Brasília
+                    </a></li>
+                      <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
+                        Endereço:
+                        Estrada Ipua, nº 6
+                        Laguna - SC  |  88790-000</a></li>
+                      <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
+                        Telefone:
+                        (48) 99940-9732
+                    </a></li>
+                    </ul>
+                  </div>  
+              </div>
+              <div class="d-flex py-4 my-4">
+                <p>© 2024  Pousada Quinta do Ypuã. Todos Direitos Reservados.</p>
+                <ul class="list-unstyled d-flex">
+                  <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-twitter"></i></a></li>
+                  <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-instagram"></i></a></li>
+                  <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-facebook"></i></a></li>
+                </ul>
+              </div>
+            </footer>
+          </div>
     </div>
-
-    <!-- Modal Pop-up do Menu Café da Manhã -->
-    <div class="modal fade scale-up" id="popupMenu" tabindex="-1" aria-labelledby="popupMenuLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content ">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="popupMenuLabel">Menu de Café da Manhã</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table ">
-                        <thead>
-                            <tr>
-                                <th scope="col">Comida</th>
-                                <th scope="col">Bebida</th>
-                                <th scope="col">Sobremesa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Pão de Queijo</td>
-                                <td>Café</td>
-                                <td>Pudim</td>
-                            </tr>
-                            <tr>
-                                <td>Bolo de Fubá</td>
-                                <td>Suco de Laranja</td>
-                                <td>Sorvete</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Pop-up de Ofertas -->
-    <div class="modal fade" id="popupOfertas" tabindex="-1" aria-labelledby="popupOfertasLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="popupOfertasLabel">Ofertas Especiais</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Desconto de 20% para reservas feitas até o final do mês!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Pop-up de Galeria de Paisagem -->
-    <div class="modal fade" id="popupGaleria" tabindex="-1" aria-labelledby="popupGaleriaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="popupGaleriaLabel">Galeria de Paisagem</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img src="paisagem.jpg" alt="Paisagem" class="img-fluid">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="overlay" id="overlay"></div>
-
-    <div class="popup" id="popupForm">
-        <h2>Fazer a Reserva</h2>
-        <form id="reservaForm">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
-            
-            <label for="telefone">Telefone:</label>
-            <input type="tel" id="telefone" name="telefone" required>
-            
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required>
-            
-            <label for="pagamento">Forma de Pagamento:</label>
-            <select id="pagamento" name="pagamento">
-                <option value="cartao">Cartão de Crédito</option>
-                <option value="boleto">Boleto</option>
-                <option value="pix">PIX</option>
-            </select>
-            
-            <label for="checkin">Dia de Check-in:</label>
-            <input type="date" id="checkin" name="checkin" required>
-            
-            <label for="checkout">Dia de Check-out:</label>
-            <input type="date" id="checkout" name="checkout" required>
-            
-            <label for="quarto">Tipo de Quarto:</label>
-            <select id="quarto" name="quarto">
-                <option value="simples">Simples</option>
-                <option value="luxo">Luxo</option>
-                <option value="familiar">Familiar</option>
-            </select>
-            
-            <button type="button" id="enviarReserva">Enviar</button>
-        </form>
+    
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
