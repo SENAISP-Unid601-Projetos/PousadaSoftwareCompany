@@ -2,215 +2,222 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./static/css/index.css">
-    <title>Pousada Encantada</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <title>Pousada Encantada</title>
 </head>
 
 <body>
-    <div class="container">
-        <header class="d-flex justify-content-center py-3">
-          <ul class="nav nav-pills">
-            <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
-            <li class="nav-item"><a href="#cafe-da-manha" class="nav-link">Café da Manhã</a></li>
-            <li class="nav-item"><a href="#acomodacoes" class="nav-link">Acomodações</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Sobre</a></li>
-          </ul>
-        </header>
+  <div class="container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
+        <li class="nav-item"><a href="#cafe-da-manha" class="nav-link">Café da Manhã</a></li>
+        <li class="nav-item"><a href="#acomodacoes" class="nav-link">Acomodações</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Sobre</a></li>
+      </ul>
+    </header>
+  </div>
+  <div class="b-example-divider"></div>
+  <!-- Menu Lateral -->
+  <div class="menu-lateral">
+    <h2>Pousada Encantada</h2>
+    <ul>
+      <li><a href="#" id="openPopup">Fazer a Reserva</a></li>
+      <li><a href="{{ url_for('getLogin') }}">Voltar para Login</a></li>
+    </ul>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div class="content">
+    <!-- Carrossel Bootstrap Centralizado -->
+    <div class="carousel-container">
+      <div id="topCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{{ url_for('static', filename='images/cupom.png') }}" class="d-block w-100" alt="Ofertas">
+            <div class="carousel-caption d-none d-md-block">
+              <h5 style="color: black;">Promoções Especiais</h5>
+              <p><a href="#" data-bs-toggle="modal" data-bs-target="#popupOfertas">Ver Ofertas</a></p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{{ url_for('static', filename='images/cupom.png') }}" class="d-block w-100" alt="Atrações">
+            <div class="carousel-caption d-none d-md-block">
+              <h6>Menu Café da Manhã</h6>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="accommodations.jpg" class="d-block w-100" alt="Acomodações">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Tipos de Quartos</h5>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="paisagem.jpg" class="d-block w-100" alt="Galeria de Paisagem">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Galeria de Paisagem</h5>
+              <p><a href="#" data-bs-toggle="modal" data-bs-target="#popupGaleria">Ver Galeria</a></p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#topCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#topCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
-      <div class="b-example-divider"></div>
-    <!-- Menu Lateral -->
-    <div class="menu-lateral">
-        <h2>Pousada Encantada</h2>
-        <ul>
-            <li><a href="#" id="openPopup">Fazer a Reserva</a></li>
-            <li><a href="{{ url_for('getLogin') }}">Voltar para Login</a></li> 
-        </ul>
     </div>
 
-    <!-- Conteúdo Principal -->
-    <div class="content">
-        <!-- Carrossel Bootstrap Centralizado -->
-        <div class="carousel-container">
-            <div id="topCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="{{ url_for('static', filename='images/cupom.png') }}" class="d-block w-100" alt="Ofertas">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5 style="color: black;">Promoções Especiais</h5>
-                            <p><a href="#" data-bs-toggle="modal" data-bs-target="#popupOfertas">Ver Ofertas</a></p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="{{ url_for('static', filename='images/cupom.png') }}" class="d-block w-100" alt="Atrações">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h6>Menu Café da Manhã</h6>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="accommodations.jpg" class="d-block w-100" alt="Acomodações">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Tipos de Quartos</h5>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="paisagem.jpg" class="d-block w-100" alt="Galeria de Paisagem">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Galeria de Paisagem</h5>
-                            <p><a href="#" data-bs-toggle="modal" data-bs-target="#popupGaleria">Ver Galeria</a></p>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#topCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#topCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        </div>
+    <!-- Conteúdo de Texto -->
+    <div class="menu-principal">
+      <section id="cafe-da-manha" class="mt-4">
+        <h2>Café da Manhã</h2>
+        <p>Comece o seu dia de forma impecável com o nosso café da manhã.</p>
+      </section>
 
-        <!-- Conteúdo de Texto -->
-        <div class="menu-principal">
-            <section id="cafe-da-manha" class="mt-4">
-                <h2>Café da Manhã</h2>
-                <p>Comece o seu dia de forma impecável com o nosso café da manhã.</p>
-            </section>
-
-            <section id="acomodacoes">
-                <h2>Acomodações</h2>
-                <hr class="featurette-divider">
-                <div class="row featurette">
-                    <div class="col-md-7">
-                      <h2 class="featurette-heading fw-normal lh-1">Domo</h2>
-                      <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-                    </div>
-                    <div class="col-md-5">
-                      <img src="../static/images/domo.png" alt="" srcset="">
-                    </div>
-                  </div>
-                <hr class="featurette-divider">
-                <div class="row featurette">
-                    <div class="col-md-7">
-                      <h2 class="featurette-heading fw-normal lh-1">Charrua</h2>
-                      <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-                    </div>
-                    <div class="col-md-5">
-                      <img src="../static/images/Charrua.png" alt="">
-                    </div>
-                  </div>
-                <hr class="featurette-divider">
-                <div class="row featurette">
-                    <div class="col-md-7">
-                      <h2 class="featurette-heading fw-normal lh-1">Suite Com Cozinha</h2>
-                      <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-                    </div>
-                    <div class="col-md-5">
-                      <img src="../static/images/suiteComCozinha.png" alt="">
-                    </div>
-                  </div>
-                  <hr class="featurette-divider">
-                  <div class="row featurette">
-                    <div class="col-md-7">
-                      <h2 class="featurette-heading fw-normal lh-1">Chalé Familia</h2>
-                      <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-                    </div>
-                    <div class="col-md-5">
-                      <img src="../static/images/Chalé familia.png" alt="">
-                    </div>
-                  </div>
-                  <hr class="featurette-divider">
-                  <div class="row featurette">
-                    <div class="col-md-7">
-                      <h2 class="featurette-heading fw-normal lh-1">Cabana</h2>
-                      <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-                    </div>
-                    <div class="col-md-5">
-                      <img src="../static/images/cabana.png" alt="">
-                    </div>
-                  </div>
-                  <hr class="featurette-divider">
-                  <div class="row featurette">
-                    <div class="col-md-7">
-                      <h2 class="featurette-heading fw-normal lh-1">Estacionamento para overlanders</h2>
-                      <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-                    </div>
-                    <div class="col-md-5">
-                      <img src="../static/images/estacinamento.png" alt="">
-                    </div>
-                  </div>
-            </section>
-
-            <section id="localizacao">
-                <h2>Localização</h2>
-                <p>Situada no coração da natureza, a Pousada Encantada oferece um cenário único...</p>
-            </section>
-
-            <section id="servicos">
-                <h2>Serviços</h2>
-                <p>Wi-Fi gratuito, estacionamento privativo, piscina e spa estão à disposição...</p>
-            </section>
+      <section id="acomodacoes">
+        <h2>Acomodações</h2>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading fw-normal lh-1">Domo</h2>
+            <p class="lead">O Domo é a grande novidade da pousada. Uma acomodação totalmente diferenciada construída nos
+              padrões arquitetônicos dos domos geodésicos modernos. </p>
+          </div>
+          <div class="col-md-5">
+            <img src="../static/images/domo.png" width="500px">
+          </div>
         </div>
         <hr class="featurette-divider">
-        <div class="container">
-            <footer class="py-5">
-              <div class="row">
-                <div class="col-2">
-                  <h5>Loja</h5>
-                  <ul class="nav flex-column">
-                    <li class="nav-item mb-2"><a href="index.html" class="nav-link p-0 text-muted">Home</a></li>
-                    <li class="nav-item mb-2"><a href="#cafe-da-manha" class="nav-link p-0 text-muted">Café da Manhã</a></li>
-                    <li class="nav-item mb-2"><a href="#acomodacoes" class="nav-link p-0 text-muted">Acomodações</a></li>
-                    <li class="nav-item mb-2"><a href="quemSomos.html" class="nav-link p-0 text-muted">Sobre</a></li>
-                  </ul>
-                </div> 
-                <div class="col-2">
-                    <h5>Institucional</h5>
-                    <ul class="nav flex-column">
-                      <li class="nav-item mb-2"><a href="https://www.procon.df.gov.br/wp-content/uploads/2019/08/Codigo-do-consumidor-FINAL.pdf" class="nav-link p-0 text-muted">Codigo de Defesa do Consumidor</a></li>
-                    </ul>
-                  </div>  
-                  <div class="col-3">
-                    <h5>Atendimento</h5>
-                    <ul class="nav flex-column">
-                      <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
-                        Horário de atendimento:
-                        11:00 às 23:00 -
-                        Segunda a Domingo,
-                        horário de Brasília
-                    </a></li>
-                      <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
-                        Endereço:
-                        Estrada Ipua, nº 6
-                        Laguna - SC  |  88790-000</a></li>
-                      <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
-                        Telefone:
-                        (48) 99940-9732
-                    </a></li>
-                    </ul>
-                  </div>  
-              </div>
-              <div class="d-flex py-4 my-4">
-                <p>© 2024  Pousada Quinta do Ypuã. Todos Direitos Reservados.</p>
-                <ul class="list-unstyled d-flex">
-                  <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-twitter"></i></a></li>
-                  <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-instagram"></i></a></li>
-                  <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-facebook"></i></a></li>
-                </ul>
-              </div>
-            </footer>
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading fw-normal lh-1">Charrua</h2>
+            <p class="lead">O Charrua é uma das grandes novidades da pousada. A seguir alguns detalhes que acompanham
+              esta acomodação especial: Roupas de cama; Roupas de banho; Banheira de hidromassagem; Cozinha básica;
+              Taças; Churrasqueira; Televisão; Soundbar Jbl Cinema; Cafeteira com cápsula; Rede de descanso; Área com
+              vista para o mar; Deck externo com fogueira; Acompanha uma cesta de café da manhã; </p>
           </div>
+          <div class="col-md-5">
+            <img src="../static/images/Charrua.png" width="500px">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading fw-normal lh-1">Suite Com Cozinha</h2>
+            <p class="lead">Com ampla vista para o mar, esta acomodação possui cama de casal, cama extra,
+              ar-condicionado e TV, além de possuir também uma pequena cozinha com utensílios básicos e banheiro. Na sua
+              parte externa possui deck com churrasqueira. A acomodação é ideal para duas pessoas, podendo comportar até
+              três. </p>
+          </div>
+          <div class="col-md-5">
+            <img src="../static/images/suiteComCozinha.png" width="500px">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading fw-normal lh-1">Chalé Familia</h2>
+            <p class="lead"> Esta acomodação possui dois quartos, um dos quartos com cama de casal e TV e o outro com
+              cama de casal e uma de solteiro. Ambos os quartos são equipados com ar-condicionado. Possui também
+              banheiro, cozinha com utensílios básicos e churrasqueira. Na sua parte externa possui sacada com ampla
+              vista para o mar. A acomodação é ideal para até cinco pessoas. </p>
+          </div>
+          <div class="col-md-5">
+            <img src="../static/images/Chalé familia.png" width="500px">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading fw-normal lh-1">Cabana</h2>
+            <p class="lead"> Esta acomodação está localizada em uma área mais reservada da pousada. Possui cama de
+              casal, uma cama de solteiro, cama extra, ar-condicionado, TV, cozinha com utensílios básicos e banheiro.
+              Na área externa possui varanda e deck com churrasqueira, tendo ampla vista para o mar. A acomodação é
+              ideal para três pessoas, podendo comportar até quatro. </p>
+          </div>
+          <div class="col-md-5">
+            <img src="../static/images/cabana.png" width="500px">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading fw-normal lh-1">Estacionamento para overlanders</h2>
+            <p class="lead">A pousada conta também com um espaço plano com vista para o mar, destinado a estacionamento
+              de overlanders, tendo disponível para uso ponto de água e luz. Possui também banheiro e churrasqueira para
+              uso comum destes viajantes.</p>
+          </div>
+          <div class="col-md-5">
+            <img src="../static/images/estacinamento.png" width="500px">
+          </div>
+        </div>
+      </section>
     </div>
-    
+    <hr class="featurette-divider">
+    <div class="container">
+      <footer class="py-5">
+        <div class="row">
+          <div class="col-2">
+            <h5>Loja</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="index.html" class="nav-link p-0 text-muted">Home</a></li>
+              <li class="nav-item mb-2"><a href="#cafe-da-manha" class="nav-link p-0 text-muted">Café da Manhã</a></li>
+              <li class="nav-item mb-2"><a href="#acomodacoes" class="nav-link p-0 text-muted">Acomodações</a></li>
+              <li class="nav-item mb-2"><a href="quemSomos.html" class="nav-link p-0 text-muted">Sobre</a></li>
+            </ul>
+          </div>
+          <div class="col-2">
+            <h5>Institucional</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a
+                  href="https://www.procon.df.gov.br/wp-content/uploads/2019/08/Codigo-do-consumidor-FINAL.pdf"
+                  class="nav-link p-0 text-muted">Codigo de Defesa do Consumidor</a></li>
+            </ul>
+          </div>
+          <div class="col-3">
+            <h5>Atendimento</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
+                  Horário de atendimento:
+                  11:00 às 23:00 -
+                  Segunda a Domingo,
+                  horário de Brasília
+                </a></li>
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
+                  Endereço:
+                  Estrada Ipua, nº 6
+                  Laguna - SC | 88790-000</a></li>
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">
+                  Telefone:
+                  (48) 99940-9732
+                </a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="d-flex py-4 my-4">
+          <p>© 2024 Pousada Quinta do Ypuã. Todos Direitos Reservados.</p>
+          <ul class="list-unstyled d-flex">
+            <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-twitter"></i></a></li>
+            <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-instagram"></i></a></li>
+            <li class="ms-3"><a class="link-dark" href="#"><i class="bi bi-facebook"></i></a></li>
+          </ul>
+        </div>
+      </footer>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <script src="script.js"></script>
+  </div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>
