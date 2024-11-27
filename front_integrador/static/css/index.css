@@ -112,6 +112,44 @@ button {
   border-radius: 100px;
 }
 
+/* Estilos personalizados */
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Seção Hero */
+.hero {
+  background: url('https://via.placeholder.com/1600x600') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+}
+
+.hero h1, .hero p {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Seção sobre */
+.about {
+  background-color: #f9f9f9;
+}
+
+/* Seção Testemunho */
+.testimonial {
+  background-color: #eef2f3;
+}
+
+blockquote {
+  font-style: italic;
+  color: #555;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+footer {
+  background-color: #333;
+}
+
+
 @keyframes scale-up {
   0% {
     transform: scale(0.5);
