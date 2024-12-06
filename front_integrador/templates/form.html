@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Reserva</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Corpo e estrutura */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        /* Título */
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Formulário */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            box-sizing: border-box;
+        }
+
+        /* Estilo dos rótulos */
+        label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        /* Estilo dos inputs */
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="date"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        /* Estilo dos botões */
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Botão "Voltar" */
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .form-buttons a button {
+            background-color: #e74c3c;
+        }
+
+        .form-buttons a button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <form method="POST" action="/enviar">
+        <h1>Cadastro de Reserva</h1>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" required>
+        
+        <label for="quarto">Quarto:</label>
+        <input type="text" id="quarto" name="quarto" required>
+        
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone" required>
+        
+        <label for="celular">Celular:</label>
+        <input type="text" id="celular" name="celular" required>
+        
+        <label for="checkin">Check-in:</label>
+        <input type="date" id="checkin" name="checkin" required>
+        
+        <label for="checkout">Check-out:</label>
+        <input type="date" id="checkout" name="checkout" required>
+        
+        <div class="form-buttons">
+            <button type="submit">Enviar</button>
+            <a href="/"><button type="button">Voltar</button></a>
+        </div>
+    </form>
+    
+</body>
+</html>

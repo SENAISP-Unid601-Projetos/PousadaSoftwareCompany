@@ -16,7 +16,8 @@
         <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
         <li class="nav-item"><a href="#cafe-da-manha" class="nav-link">Café da Manhã</a></li>
         <li class="nav-item"><a href="#acomodacoes" class="nav-link">Acomodações</a></li>
-        <li class="nav-item"><a href="./sobre.html" class="nav-link">Sobre</a></li>
+        <li class="nav-item"><a href="{{ url_for('formulario') }}" class="nav-link">Formulário</a></li>
+        <li class="nav-item"><a href="{{ url_for('getLogin') }}" class="nav-link">Login</a></li>
       </ul>
     </header>
   </div>
@@ -29,14 +30,14 @@
       <div id="topCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img src="{{ url_for('static', filename='images/cupom.png') }}" class="d-block w-100" alt="Ofertas">
+            
             <div class="carousel-caption d-none d-md-block">
               <h5 style="color: black;">Promoções Especiais</h5>
               <p><a href="#" data-bs-toggle="modal" data-bs-target="#popupOfertas">Ver Ofertas</a></p>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="{{ url_for('static', filename='images/cupom.png') }}" class="d-block w-100" alt="Atrações">
+            
             <div class="carousel-caption d-none d-md-block">
               <h6>Menu Café da Manhã</h6>
             </div>
